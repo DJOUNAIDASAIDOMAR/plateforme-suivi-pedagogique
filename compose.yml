@@ -1,0 +1,131 @@
+services:
+
+  # =========================================================
+  # LARAVEL / PHP-FPM
+  # =========================================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: plateforme_app
+    restart: unless-stopped
+    working_dir: /var/www
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: ieg_learning
+      DB_USERNAME: ieg_learning
+      DB_PASSWORD: ieg_learning_password
+    volumes:
+      - ./:/var/www
+      - vendor_data:/var/www/vendor
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - plateforme_network
+
+  # =========================================================
+  # NODE / VITE
+  # =========================================================
+  node:
+    image: node:22-alpine
+    container_name: plateforme_node
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - node_modules:/var/www/node_modules
+    command: >
+      sh -c "
+      npm ci &&
+      rm -f public/hot &&
+      npm run build
+      "
+    networks:
+      - plateforme_network
+
+  # =========================================================
+  # NGINX
+  # =========================================================
+  nginx:
+    image: nginx:alpine
+    container_name: plateforme_nginx
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8088:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+      - node
+    networks:
+      - plateforme_network
+
+  # =========================================================
+  # MYSQL
+  # =========================================================
+  mysql:
+    image: mysql:8.4
+    container_name: plateforme_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ieg_learning
+      MYSQL_USER: ieg_learning
+      MYSQL_PASSWORD: ieg_learning_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h localhost -uroot -proot_password || exit 1"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - plateforme_network
+
+  # =========================================================
+  # CLOUDFLARE
+  # =========================================================
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: plateforme_cloudflared
+    restart: unless-stopped
+    command:
+      - tunnel
+      - --no-autoupdate
+      - --url
+      - http://nginx:80
+    depends_on:
+      - nginx
+    networks:
+      - plateforme_network
+
+# =========================================================
+# VOLUMES
+# =========================================================
+volumes:
+  mysql_data:
+    name: plateforme_mysql_data
+
+  node_modules:
+    name: plateforme_node_modules
+
+  vendor_data:
+    name: plateforme_vendor
+
+# =========================================================
+# RESEAU
+# =========================================================
+networks:
+  plateforme_network:
+    name: plateforme_network
+    driver: bridge
