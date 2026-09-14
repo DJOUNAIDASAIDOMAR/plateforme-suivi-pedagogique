@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>CV - SAIM CHAMSOUDINE</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .cv-container {
+            width: 800px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        /* En-tête principal */
+        .header-main {
+            text-align: center;
+            padding: 25px 20px 15px;
+        }
+        .header-main h1 {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        .header-main h2 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        /* Banner Bleu */
+        .banner-blue {
+            background-color: #12284c;
+            color: white;
+            text-align: center;
+            padding: 12px 10px;
+        }
+        .banner-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        .banner-stats {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+        .banner-badge {
+            font-size: 13px;
+            font-weight: bold;
+        }
+        /* Corps du CV en 2 colonnes */
+        .cv-body {
+            display: flex;
+        }
+        /* Colonne Gauche */
+        .left-col {
+            width: 35%;
+            background-color: #e9ecef;
+            padding: 20px 15px;
+            border-right: 1px solid #ddd;
+        }
+        /* Colonne Droite */
+        .right-col {
+            width: 65%;
+            padding: 20px 25px;
+            background-color: #fff;
+        }
+        /* Styles des sections */
+        .section-title {
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 3px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-block {
+            margin-bottom: 25px;
+        }
+        /* Listes & Textes */
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .left-col ul li {
+            font-size: 12px;
+            margin-bottom: 6px;
+            position: relative;
+            padding-left: 12px;
+        }
+        .left-col ul li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        .contact-list li {
+            padding-left: 0 !important;
+        }
+        .contact-list li::before {
+            content: "" !important;
+        }
+        p, .text-content {
+            font-size: 12px;
+            line-height: 1.4;
+            color: #222;
+        }
+        /* Item Expérience / Diplôme */
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 2px;
+        }
+        .item-title {
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .item-date {
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+        }
+        .item-sub {
+            font-size: 12px;
+            color: #444;
+            margin-bottom: 15px;
+        }
+        .bullet-item {
+            position: relative;
+            padding-left: 15px;
+            margin-bottom: 18px;
+        }
+        .bullet-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            top: -1px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="cv-container">
+    <!-- En-tête -->
+    <div class="header-main">
+        <h1>SAIM CHAMSOUDINE</h1>
+        <h2>TECHNICIEN SUPÉRIEUR EN CONTRÔLE NON DESTRUCTIF</h2>
+    </div>
+
+    <!-- Bandeau Bleu -->
+    <div class="banner-blue">
+        <div class="banner-title">TOTAL FORMATION : 1690 HEURES (SUR 1 AN)</div>
+        <div class="banner-stats">
+            <span>🕒 <strong>490H (67 JOURS)</strong> À L'ÉCOLE (Institut de Soudure)</span>
+            <span>-</span>
+            <span>🏭 <strong>1200H EN ENTREPRISE</strong> (Alternance)</span>
+        </div>
+        <div class="banner-badge">🎓 Diplôme de Niveau 5 (Bac+2)</div>
+    </div>
+
+    <!-- Contenu -->
+    <div class="cv-body">
+        <!-- Colonne Gauche -->
+        <div class="left-col">
+            <div class="section-block">
+                <div class="section-title">CONTACT</div>
+                <ul class="contact-list">
+                    <li>📞 0625099579</li>
+                    <li>✉️ saimchamsoudinepro@gmail.com</li>
+                    <li>📍 12 square de la Salamandre<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;75020</li>
+                </ul>
+            </div>
+
+            <div class="section-block">
+                <div class="section-title">PERMIS B (2023)</div>
+            </div>
+
+            <div class="section-block">
+                <div class="section-title">COMPETENCES</div>
+                <ul>
+                    <li>Mobilité Nationale</li>
+                    <li>Facilité d'adaptation</li>
+                    <li>Bon relationnel</li>
+                    <li>Esprit d'équipe</li>
+                    <li>Sens de l'organisation</li>
+                    <li>Ponctuel</li>
+                    <li>Dynamique</li>
+                </ul>
+            </div>
+
+            <div class="section-block">
+                <div class="section-title">LANGUES</div>
+                <ul>
+                    <li>Anglais (B1)</li>
+                    <li>Espagnol (A2)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Colonne Droite -->
+        <div class="right-col">
+            <div class="section-block">
+                <div class="section-title">👤 PROFILE</div>
+                <p class="text-content">
+                    Animé par l'envie de construire un avenir dans le secteur du nucléaire, je recherche une alternance en tant que technicien en contrôle non destructif étant prêt à m'investir pleinement dans une formation exigeante et à évoluer au sein d'une entreprise reconnue et être embauché chez SGS. Mon dossier d'inscription avec l'Institut de Soudure de Villepinte est déjà complété et prêt à être envoyé.
+                </p>
+            </div>
+
+            <div class="section-block">
+                <div class="section-title">💼 EXPERIENCE</div>
+                
+                <div class="bullet-item">
+                    <div class="item-row">
+                        <span class="item-title">SED LOGISTIQUE</span>
+                        <span class="item-date">(2025-PRÉSENT)</span>
+                    </div>
+                    <div class="item-sub">Préparateur de commande</div>
+                </div>
+
+                <div class="bullet-item">
+                    <div class="item-row">
+                        <span class="item-title">GOFO</span>
+                        <span class="item-date">(2024-2025)</span>
+                    </div>
+                    <div class="item-sub">Agent de tri</div>
+                </div>
+
+                <div class="bullet-item">
+                    <div class="item-row">
+                        <span class="item-title">EVEN</span>
+                        <span class="item-date">(2023)</span>
+                    </div>
+                    <div class="item-sub">Agent d'entretien</div>
+                </div>
+            </div>
+
+            <div class="section-block">
+                <div class="section-title">🎓 DIPLÔME</div>
+                
+                <div class="bullet-item">
+                    <div class="item-title">Technicien Supérieur CND (Bac+2)</div>
+                    <div class="item-sub">Institut de Soudure de Villepinte (2026-En cours)</div>
+                </div>
+
+                <div class="bullet-item">
+                    <div class="item-title">Bac Pro Vente (2021-2022)</div>
+                </div>
+
+                <div class="bullet-item">
+                    <div class="item-sub"><strong>Formations courtes:</strong> Technicien Fibre Optique avec habilitec et gidef (4 mois), Stage de découverte en développement web avec belleville citoyenne</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Etudiant;
 use App\Models\Filier;
 use App\Models\Formateur;
-use App\Models\ResponsablePedagogique;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,13 +20,12 @@ use Illuminate\View\View;
 class AuthController extends Controller
 {
     /**
-     * Nombre maximum de tentatives.
+     * Nombre maximum de tentatives de connexion.
      */
     private const MAX_LOGIN_ATTEMPTS = 5;
 
     /**
-     * Durée du blocage en secondes.
-     * 300 secondes = 5 minutes.
+     * Durée du blocage : 5 minutes.
      */
     private const LOGIN_DECAY_SECONDS = 300;
 
@@ -50,6 +48,16 @@ class AuthController extends Controller
 
     /**
      * Enregistre un nouvel utilisateur.
+     *
+     * IMPORTANT :
+     * L'inscription publique est uniquement
+     * autorisée pour :
+     *
+     * - les étudiants ;
+     * - les formateurs.
+     *
+     * Le responsable pédagogique est un administrateur
+     * et ne peut donc pas s'inscrire depuis le site public.
      */
     public function register(
         Request $request
@@ -77,14 +85,6 @@ class AuthController extends Controller
             |--------------------------------------------------------------------------
             | MOT DE PASSE SÉCURISÉ
             |--------------------------------------------------------------------------
-            |
-            | Minimum 8 caractères
-            | Minimum 1 majuscule
-            | Minimum 1 minuscule
-            | Minimum 1 chiffre
-            | Minimum 1 caractère spécial
-            | Confirmation obligatoire
-            |
             */
 
             'password' => [
@@ -97,15 +97,30 @@ class AuthController extends Controller
                     ->symbols(),
             ],
 
+            /*
+            |--------------------------------------------------------------------------
+            | RÔLE
+            |--------------------------------------------------------------------------
+            |
+            | IMPORTANT :
+            | Le responsable pédagogique n'est PAS autorisé ici.
+            |
+            */
+
             'role' => [
                 'required',
 
                 Rule::in([
                     'etudiant',
                     'formateur',
-                    'responsable_pedagogique',
                 ]),
             ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | FILIÈRE ÉTUDIANT
+            |--------------------------------------------------------------------------
+            */
 
             'id_filier' => [
                 Rule::requiredIf(
@@ -123,6 +138,12 @@ class AuthController extends Controller
                 ),
             ],
 
+            /*
+            |--------------------------------------------------------------------------
+            | SPÉCIALITÉ FORMATEUR
+            |--------------------------------------------------------------------------
+            */
+
             'specialite' => [
                 Rule::requiredIf(
                     fn (): bool =>
@@ -134,7 +155,9 @@ class AuthController extends Controller
                 'string',
                 'max:150',
             ],
+
         ], [
+
             'nom.required' =>
                 'Le nom est obligatoire.',
 
@@ -159,6 +182,9 @@ class AuthController extends Controller
             'role.required' =>
                 'Veuillez choisir un rôle.',
 
+            'role.in' =>
+                'Le rôle sélectionné n’est pas autorisé.',
+
             'id_filier.required' =>
                 'Veuillez choisir une filière.',
 
@@ -169,6 +195,12 @@ class AuthController extends Controller
                 'La spécialité du formateur est obligatoire.',
         ]);
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | CRÉATION DU COMPTE
+        |--------------------------------------------------------------------------
+        */
 
         $user = DB::transaction(
             function () use ($validated): User {
@@ -203,6 +235,7 @@ class AuthController extends Controller
                     $validated['role']
                     === 'etudiant'
                 ) {
+
                     Etudiant::create([
                         'id_user' =>
                             $user->id_user,
@@ -226,29 +259,13 @@ class AuthController extends Controller
                     $validated['role']
                     === 'formateur'
                 ) {
+
                     Formateur::create([
                         'id_user' =>
                             $user->id_user,
 
                         'specialité' =>
                             $validated['specialite'],
-                    ]);
-                }
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | PROFIL RESPONSABLE PÉDAGOGIQUE
-                |--------------------------------------------------------------------------
-                */
-
-                if (
-                    $validated['role']
-                    === 'responsable_pedagogique'
-                ) {
-                    ResponsablePedagogique::create([
-                        'id_user' =>
-                            $user->id_user,
                     ]);
                 }
 
@@ -291,10 +308,6 @@ class AuthController extends Controller
 
     /**
      * Connecte un utilisateur.
-     *
-     * Protection :
-     * 5 tentatives incorrectes maximum.
-     * Après 5 échecs : blocage pendant 5 minutes.
      */
     public function login(
         Request $request
@@ -311,6 +324,7 @@ class AuthController extends Controller
                 'string',
             ],
         ], [
+
             'email.required' =>
                 'L’adresse e-mail est obligatoire.',
 
@@ -326,12 +340,6 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         | CLÉ DU LIMITEUR
         |--------------------------------------------------------------------------
-        |
-        | La limitation dépend de :
-        |
-        | - l'adresse e-mail ;
-        | - l'adresse IP.
-        |
         */
 
         $throttleKey =
@@ -342,7 +350,7 @@ class AuthController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | VÉRIFIER SI L'UTILISATEUR EST DÉJÀ BLOQUÉ
+        | VÉRIFIER LE BLOCAGE
         |--------------------------------------------------------------------------
         */
 
@@ -397,23 +405,11 @@ class AuthController extends Controller
             )
         ) {
 
-            /*
-            |--------------------------------------------------------------------------
-            | ENREGISTRER UNE TENTATIVE ÉCHOUÉE
-            |--------------------------------------------------------------------------
-            */
-
             RateLimiter::hit(
                 $throttleKey,
                 self::LOGIN_DECAY_SECONDS
             );
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | NOMBRE DE TENTATIVES RESTANTES
-            |--------------------------------------------------------------------------
-            */
 
             $remainingAttempts =
                 RateLimiter::remaining(
@@ -421,12 +417,6 @@ class AuthController extends Controller
                     self::MAX_LOGIN_ATTEMPTS
                 );
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | SI C'ÉTAIT LA 5e TENTATIVE
-            |--------------------------------------------------------------------------
-            */
 
             if ($remainingAttempts <= 0) {
 
@@ -440,12 +430,6 @@ class AuthController extends Controller
                     ->onlyInput('email');
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | SINON : INFORMER DU NOMBRE DE TENTATIVES RESTANTES
-            |--------------------------------------------------------------------------
-            */
 
             return back()
                 ->withErrors([
@@ -463,9 +447,6 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         | CONNEXION RÉUSSIE
         |--------------------------------------------------------------------------
-        |
-        | On supprime le compteur d'échecs.
-        |
         */
 
         RateLimiter::clear(
@@ -485,38 +466,159 @@ class AuthController extends Controller
 
 
     /**
-     * Affiche le tableau de bord
-     * correspondant au rôle.
+     * Affiche le tableau de bord selon le rôle.
      */
     public function dashboard(): View
     {
         $user = Auth::user();
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | ÉTUDIANT
+        |--------------------------------------------------------------------------
+        */
+
         if (
             $user->role === 'etudiant'
         ) {
+
             $user->load(
                 'etudiant.filier'
             );
 
+            $etudiant = $user->etudiant;
+
+            $nombreCours = 0;
+            $quizRealises = 0;
+            $totalQuiz = 0;
+            $progression = 0;
+
+
+            if ($etudiant) {
+
+                /*
+                |--------------------------------------------------------------------------
+                | NOMBRE DE COURS DE LA FILIÈRE
+                |--------------------------------------------------------------------------
+                */
+
+                $nombreCours = DB::table('cours')
+                    ->where(
+                        'id_filier',
+                        $etudiant->id_filier
+                    )
+                    ->count();
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | QUIZ DIFFÉRENTS RÉALISÉS
+                |--------------------------------------------------------------------------
+                |
+                | Un quiz refait plusieurs fois
+                | ne compte qu'une seule fois.
+                |
+                */
+
+                $quizRealises = DB::table('resultat')
+                    ->where(
+                        'id_etudiant',
+                        $etudiant->id_etudiant
+                    )
+                    ->distinct()
+                    ->count('id_quiz');
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | TOTAL DES QUIZ DE LA FILIÈRE
+                |--------------------------------------------------------------------------
+                */
+
+                $totalQuiz = DB::table('quiz')
+                    ->join(
+                        'cours',
+                        'quiz.id_cours',
+                        '=',
+                        'cours.id_cours'
+                    )
+                    ->where(
+                        'cours.id_filier',
+                        $etudiant->id_filier
+                    )
+                    ->count();
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | PROGRESSION
+                |--------------------------------------------------------------------------
+                */
+
+                if ($totalQuiz > 0) {
+
+                    $progression = round(
+                        (
+                            $quizRealises
+                            / $totalQuiz
+                        ) * 100
+                    );
+                }
+            }
+
+
             return view(
                 'dashboard-etudiant',
-                compact('user')
+                compact(
+                    'user',
+                    'nombreCours',
+                    'quizRealises',
+                    'totalQuiz',
+                    'progression'
+                )
             );
         }
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | FORMATEUR
+        |--------------------------------------------------------------------------
+        */
+
         if (
             $user->role === 'formateur'
         ) {
-            $user->load('formateur');
+
+            $user->load(
+                'formateur'
+            );
+
 
             return view(
                 'dashboard-formateur',
                 compact('user')
             );
         }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | RESPONSABLE PÉDAGOGIQUE
+        |--------------------------------------------------------------------------
+        |
+        | Le responsable peut toujours se connecter.
+        | Il ne peut simplement plus créer son compte
+        | depuis l'inscription publique.
+        |
+        */
+
+        abort_unless(
+            $user->role
+            === 'responsable_pedagogique',
+            403
+        );
 
 
         $user->load(
@@ -544,6 +646,7 @@ class AuthController extends Controller
         $request
             ->session()
             ->invalidate();
+
 
         $request
             ->session()

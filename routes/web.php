@@ -842,6 +842,14 @@ Route::middleware('auth')->group(function (): void {
             ->name('responsable.utilisateurs.update');
 
 
+        Route::delete(
+            '/responsable/utilisateurs/{id}',
+            [ResponsableUtilisateurController::class, 'destroy']
+        )
+            ->whereNumber('id')
+            ->name('responsable.utilisateurs.destroy');
+
+
         /*
         |--------------------------------------------------------------------------
         | FILIÈRES

@@ -36,11 +36,17 @@
         margin-bottom: 20px;
         padding: 15px;
         border-radius: 10px;
+        font-weight: 700;
     }
 
     .success {
         background: #f0fdf4;
         color: #15803d;
+    }
+
+    .error {
+        background: #fef2f2;
+        color: #b91c1c;
     }
 
     .table-wrapper {
@@ -76,14 +82,44 @@
         font-weight: 800;
     }
 
+    .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+    }
+
     .button {
         display: inline-block;
         padding: 9px 13px;
+        border: 0;
         border-radius: 8px;
-        background: #1e3a8a;
         color: white;
+        font-family: inherit;
+        font-size: 14px;
         font-weight: 700;
         text-decoration: none;
+        cursor: pointer;
+    }
+
+    .button-edit {
+        background: #1e3a8a;
+    }
+
+    .button-delete {
+        background: #dc2626;
+    }
+
+    .button-edit:hover {
+        background: #172554;
+    }
+
+    .button-delete:hover {
+        background: #b91c1c;
+    }
+
+    .delete-form {
+        margin: 0;
     }
 </style>
 @endpush
@@ -96,7 +132,7 @@
         <header class="header">
             <h1>Gérer les utilisateurs</h1>
             <p>
-                Consultez et modifiez les comptes
+                Consultez, modifiez et supprimez les comptes
                 des étudiants et des formateurs.
             </p>
         </header>
@@ -104,6 +140,12 @@
         @if (session('success'))
             <div class="message success">
                 {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="message error">
+                {{ session('error') }}
             </div>
         @endif
 
@@ -172,17 +214,44 @@
 
                             <td>
 
-                                <a
-                                    class="button"
-                                    href="{{
-                                        route(
-                                            'responsable.utilisateurs.edit',
-                                            $utilisateur->id_user
-                                        )
-                                    }}"
-                                >
-                                    Modifier
-                                </a>
+                                <div class="actions">
+
+                                    <a
+                                        class="button button-edit"
+                                        href="{{
+                                            route(
+                                                'responsable.utilisateurs.edit',
+                                                $utilisateur->id_user
+                                            )
+                                        }}"
+                                    >
+                                        Modifier
+                                    </a>
+
+                                    <form
+                                        class="delete-form"
+                                        action="{{
+                                            route(
+                                                'responsable.utilisateurs.destroy',
+                                                $utilisateur->id_user
+                                            )
+                                        }}"
+                                        method="POST"
+                                        onsubmit="return confirm('Voulez-vous vraiment supprimer cet utilisateur ? Cette action est définitive.');"
+                                    >
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button
+                                            type="submit"
+                                            class="button button-delete"
+                                        >
+                                            Supprimer
+                                        </button>
+
+                                    </form>
+
+                                </div>
 
                             </td>
 

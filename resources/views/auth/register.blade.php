@@ -1,261 +1,281 @@
-<!DOCTYPE html>
-<html lang="fr">
+@extends('layouts.site')
 
-<head>
+@section(
+    'title',
+    'Créer un compte - Plateforme de Suivi Pédagogique'
+)
 
-    <meta charset="UTF-8">
+@push('styles')
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<style>
 
-    <title>
-        Inscription - Plateforme de suivi pédagogique
-    </title>
+    .register-page {
+        min-height: 100vh;
+        padding: 45px 20px 80px;
+        background:
+            linear-gradient(
+                135deg,
+                #f8fafc,
+                #eef4ff
+            );
+    }
 
-    <style>
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+    .register-container {
+        width: 100%;
+        max-width: 650px;
+        margin: 0 auto;
+        padding: 34px;
+        border-radius: 20px;
+        background: #ffffff;
+        box-shadow:
+            0 15px 45px
+            rgba(30, 64, 175, 0.10);
+    }
+
+
+    .register-header {
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+
+    .register-header h1 {
+        margin: 0 0 10px;
+        color: #1d4ed8;
+        font-size: 30px;
+    }
+
+
+    .register-header p {
+        margin: 0;
+        color: #6b7280;
+        font-size: 16px;
+    }
+
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        color: #111827;
+        font-weight: 700;
+    }
+
+
+    .form-input,
+    .form-select {
+        width: 100%;
+        min-height: 46px;
+        padding: 11px 13px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        background: #ffffff;
+        color: #111827;
+        font-size: 15px;
+        box-sizing: border-box;
+    }
+
+
+    .form-input:focus,
+    .form-select:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow:
+            0 0 0 3px
+            rgba(37, 99, 235, 0.10);
+    }
+
+
+    .roles {
+        display: grid;
+        grid-template-columns:
+            repeat(2, 1fr);
+        gap: 14px;
+    }
+
+
+    .role-option {
+        position: relative;
+    }
+
+
+    .role-option input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+
+    .role-card {
+        display: flex;
+        min-height: 88px;
+        padding: 15px;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        align-items: center;
+        justify-content: center;
+        background: #ffffff;
+        color: #111827;
+        font-weight: 800;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+
+    .role-card:hover {
+        border-color: #93c5fd;
+        background: #eff6ff;
+    }
+
+
+    .role-option input:checked + .role-card {
+        border-color: #2563eb;
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+
+    .conditional-field {
+        display: none;
+    }
+
+
+    .password-wrapper {
+        position: relative;
+    }
+
+
+    .password-wrapper .form-input {
+        padding-right: 85px;
+    }
+
+
+    .password-toggle {
+        position: absolute;
+        top: 50%;
+        right: 14px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: #2563eb;
+        font-weight: 700;
+        cursor: pointer;
+        transform: translateY(-50%);
+    }
+
+
+    .password-rules {
+        margin-top: 10px;
+        padding: 15px;
+        border: 1px solid #bfdbfe;
+        border-radius: 10px;
+        background: #eff6ff;
+        color: #1e3a8a;
+        font-size: 14px;
+    }
+
+
+    .password-rules strong {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+
+    .password-rules ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+
+    .password-rules li {
+        margin: 4px 0;
+    }
+
+
+    .error-message {
+        margin-top: 6px;
+        color: #dc2626;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+
+    .general-errors {
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #fecaca;
+        border-radius: 10px;
+        background: #fef2f2;
+        color: #b91c1c;
+    }
+
+
+    .submit-button {
+        width: 100%;
+        min-height: 48px;
+        margin-top: 10px;
+        padding: 12px 20px;
+        border: 0;
+        border-radius: 10px;
+        background: #2563eb;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+
+    .submit-button:hover {
+        background: #1d4ed8;
+    }
+
+
+    .login-link {
+        margin-top: 22px;
+        text-align: center;
+        color: #6b7280;
+    }
+
+
+    .login-link a {
+        color: #2563eb;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+
+    @media (max-width: 650px) {
+
+        .register-container {
+            padding: 25px 20px;
         }
 
-        body {
-            min-height: 100vh;
-            padding: 40px 20px;
-            font-family: Arial, sans-serif;
 
-            background:
-                linear-gradient(
-                    135deg,
-                    #eef4ff,
-                    #f8fbff
-                );
-
-            color: #1f2937;
+        .roles {
+            grid-template-columns: 1fr;
         }
+    }
 
-        .auth-container {
-            width: 100%;
-            max-width: 650px;
-            margin: 0 auto;
-            padding: 35px;
-            background: #ffffff;
-            border-radius: 18px;
+</style>
 
-            box-shadow:
-                0 15px 45px
-                rgba(30, 64, 175, 0.12);
-        }
+@endpush
 
-        .auth-header {
-            margin-bottom: 28px;
-            text-align: center;
-        }
 
-        .auth-header h1 {
-            margin-bottom: 10px;
-            color: #1d4ed8;
-            font-size: 30px;
-        }
+@section('content')
 
-        .auth-header p {
-            color: #6b7280;
-            line-height: 1.6;
-        }
+<section class="register-page">
 
-        .alert {
-            margin-bottom: 20px;
-            padding: 14px 16px;
-            border-radius: 10px;
-        }
+    <div class="register-container">
 
-        .alert-error {
-            border: 1px solid #fecaca;
-            background: #fef2f2;
-            color: #b91c1c;
-        }
 
-        .alert ul {
-            padding-left: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 13px 14px;
-            border: 1px solid #d1d5db;
-            border-radius: 10px;
-            outline: none;
-            font-size: 15px;
-            transition: 0.2s;
-        }
-
-        .form-control:focus {
-            border-color: #2563eb;
-
-            box-shadow:
-                0 0 0 3px
-                rgba(37, 99, 235, 0.12);
-        }
-
-        .role-grid {
-            display: grid;
-
-            grid-template-columns:
-                repeat(3, 1fr);
-
-            gap: 12px;
-        }
-
-        .role-option {
-            position: relative;
-        }
-
-        .role-option input {
-            position: absolute;
-            opacity: 0;
-        }
-
-        .role-option label {
-            display: flex;
-            min-height: 90px;
-            padding: 15px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .role-option input:checked + label {
-            border-color: #2563eb;
-            background: #eff6ff;
-            color: #1d4ed8;
-        }
-
-        .conditional-field {
-            display: none;
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | RÈGLES DU MOT DE PASSE
-        |--------------------------------------------------------------------------
-        */
-
-        .password-requirements {
-            margin-top: 10px;
-            padding: 14px 16px;
-            border: 1px solid #dbeafe;
-            border-radius: 10px;
-            background: #eff6ff;
-        }
-
-        .password-requirements-title {
-            margin-bottom: 9px;
-            color: #1e3a8a;
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        .password-requirements ul {
-            padding-left: 20px;
-            color: #475569;
-            font-size: 13px;
-            line-height: 1.8;
-        }
-
-        .password-requirements li.valid {
-            color: #15803d;
-            font-weight: 700;
-        }
-
-        .password-requirements li.invalid {
-            color: #64748b;
-        }
-
-        .password-wrapper {
-            position: relative;
-        }
-
-        .password-wrapper .form-control {
-            padding-right: 95px;
-        }
-
-        .password-toggle {
-            position: absolute;
-            top: 50%;
-            right: 12px;
-            border: none;
-            background: transparent;
-            color: #2563eb;
-            font-weight: 700;
-            cursor: pointer;
-            transform: translateY(-50%);
-        }
-
-        .button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            background: #2563eb;
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .button:hover {
-            background: #1d4ed8;
-        }
-
-        .auth-footer {
-            margin-top: 22px;
-            text-align: center;
-        }
-
-        .auth-footer a {
-            color: #2563eb;
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        @media (max-width: 650px) {
-
-            .auth-container {
-                padding: 25px 20px;
-            }
-
-            .role-grid {
-                grid-template-columns: 1fr;
-            }
-
-        }
-
-    </style>
-
-</head>
-
-<body>
-
-    <main class="auth-container">
-
-        <header class="auth-header">
+        <header class="register-header">
 
             <h1>
                 Créer un compte
@@ -271,19 +291,11 @@
 
         @if ($errors->any())
 
-            <div class="alert alert-error">
+            <div class="general-errors">
 
-                <ul>
-
-                    @foreach ($errors->all() as $error)
-
-                        <li>
-                            {{ $error }}
-                        </li>
-
-                    @endforeach
-
-                </ul>
+                <strong>
+                    Veuillez vérifier les informations saisies.
+                </strong>
 
             </div>
 
@@ -291,63 +303,94 @@
 
 
         <form
-            method="POST"
             action="{{ route('register.store') }}"
+            method="POST"
         >
 
             @csrf
 
 
+            {{-- NOM --}}
+
             <div class="form-group">
 
-                <label for="nom">
+                <label
+                    for="nom"
+                    class="form-label"
+                >
                     Nom complet
                 </label>
 
                 <input
-                    class="form-control"
                     id="nom"
                     type="text"
                     name="nom"
+                    class="form-input"
                     value="{{ old('nom') }}"
                     required
                     autocomplete="name"
                 >
 
+                @error('nom')
+
+                    <div class="error-message">
+                        {{ $message }}
+                    </div>
+
+                @enderror
+
             </div>
 
 
+            {{-- EMAIL --}}
+
             <div class="form-group">
 
-                <label for="email">
+                <label
+                    for="email"
+                    class="form-label"
+                >
                     Adresse e-mail
                 </label>
 
                 <input
-                    class="form-control"
                     id="email"
                     type="email"
                     name="email"
+                    class="form-input"
                     value="{{ old('email') }}"
                     required
                     autocomplete="email"
                 >
 
+                @error('email')
+
+                    <div class="error-message">
+                        {{ $message }}
+                    </div>
+
+                @enderror
+
             </div>
 
 
+            {{-- RÔLE --}}
+
             <div class="form-group">
 
-                <label>
+                <div class="form-label">
                     Choisissez votre rôle
-                </label>
+                </div>
 
-                <div class="role-grid">
 
-                    <div class="role-option">
+                <div class="roles">
+
+
+                    {{-- ÉTUDIANT --}}
+
+                    <label class="role-option">
 
                         <input
-                            id="role-etudiant"
                             type="radio"
                             name="role"
                             value="etudiant"
@@ -359,17 +402,18 @@
                             required
                         >
 
-                        <label for="role-etudiant">
+                        <span class="role-card">
                             Étudiant
-                        </label>
+                        </span>
 
-                    </div>
+                    </label>
 
 
-                    <div class="role-option">
+                    {{-- FORMATEUR --}}
+
+                    <label class="role-option">
 
                         <input
-                            id="role-formateur"
                             type="radio"
                             name="role"
                             value="formateur"
@@ -381,67 +425,60 @@
                             required
                         >
 
-                        <label for="role-formateur">
+                        <span class="role-card">
                             Formateur
-                        </label>
+                        </span>
 
-                    </div>
+                    </label>
 
-
-                    <div class="role-option">
-
-                        <input
-                            id="role-responsable"
-                            type="radio"
-                            name="role"
-                            value="responsable_pedagogique"
-                            {{
-                                old('role')
-                                === 'responsable_pedagogique'
-                                    ? 'checked'
-                                    : ''
-                            }}
-                            required
-                        >
-
-                        <label for="role-responsable">
-                            Responsable pédagogique
-                        </label>
-
-                    </div>
 
                 </div>
+
+
+                @error('role')
+
+                    <div class="error-message">
+                        {{ $message }}
+                    </div>
+
+                @enderror
 
             </div>
 
 
+            {{-- FILIÈRE ÉTUDIANT --}}
+
             <div
-                class="form-group conditional-field"
-                id="filiere-field"
+                id="studentFields"
+                class="conditional-field form-group"
             >
 
-                <label for="id_filier">
+                <label
+                    for="id_filier"
+                    class="form-label"
+                >
                     Filière
                 </label>
 
+
                 <select
-                    class="form-control"
                     id="id_filier"
                     name="id_filier"
+                    class="form-select"
                 >
 
                     <option value="">
-                        Sélectionnez une filière
+                        Sélectionnez votre filière
                     </option>
+
 
                     @foreach ($filieres as $filiere)
 
                         <option
                             value="{{ $filiere->id_filier }}"
                             {{
-                                (string) old('id_filier')
-                                ===
-                                (string) $filiere->id_filier
+                                old('id_filier')
+                                == $filiere->id_filier
                                     ? 'selected'
                                     : ''
                             }}
@@ -453,52 +490,82 @@
 
                 </select>
 
+
+                @error('id_filier')
+
+                    <div class="error-message">
+                        {{ $message }}
+                    </div>
+
+                @enderror
+
             </div>
 
 
+            {{-- SPÉCIALITÉ FORMATEUR --}}
+
             <div
-                class="form-group conditional-field"
-                id="specialite-field"
+                id="teacherFields"
+                class="conditional-field form-group"
             >
 
-                <label for="specialite">
+                <label
+                    for="specialite"
+                    class="form-label"
+                >
                     Spécialité
                 </label>
 
+
                 <input
-                    class="form-control"
                     id="specialite"
                     type="text"
                     name="specialite"
+                    class="form-input"
                     value="{{ old('specialite') }}"
-                    placeholder="Exemple : développement web"
+                    placeholder="Exemple : Développement Web"
                 >
+
+
+                @error('specialite')
+
+                    <div class="error-message">
+                        {{ $message }}
+                    </div>
+
+                @enderror
 
             </div>
 
 
+            {{-- MOT DE PASSE --}}
+
             <div class="form-group">
 
-                <label for="password">
+                <label
+                    for="password"
+                    class="form-label"
+                >
                     Mot de passe
                 </label>
+
 
                 <div class="password-wrapper">
 
                     <input
-                        class="form-control"
                         id="password"
                         type="password"
                         name="password"
+                        class="form-input"
                         required
-                        minlength="8"
                         autocomplete="new-password"
                     >
 
+
                     <button
-                        class="password-toggle"
                         type="button"
-                        data-target="password"
+                        class="password-toggle"
+                        onclick="togglePassword('password', this)"
                     >
                         Afficher
                     </button>
@@ -506,79 +573,81 @@
                 </div>
 
 
-                <div class="password-requirements">
+                <div class="password-rules">
 
-                    <div class="password-requirements-title">
+                    <strong>
                         Le mot de passe doit contenir :
-                    </div>
+                    </strong>
 
                     <ul>
-
-                        <li
-                            class="invalid"
-                            id="rule-length"
-                        >
+                        <li>
                             Au moins 8 caractères
                         </li>
 
-                        <li
-                            class="invalid"
-                            id="rule-uppercase"
-                        >
-                            Au moins une lettre majuscule
+                        <li>
+                            Une lettre majuscule
                         </li>
 
-                        <li
-                            class="invalid"
-                            id="rule-lowercase"
-                        >
-                            Au moins une lettre minuscule
+                        <li>
+                            Une lettre minuscule
                         </li>
 
-                        <li
-                            class="invalid"
-                            id="rule-number"
-                        >
-                            Au moins un chiffre
+                        <li>
+                            Un chiffre
                         </li>
 
-                        <li
-                            class="invalid"
-                            id="rule-symbol"
-                        >
-                            Au moins un caractère spécial
-                            (@, !, #, $, %, &, *, ?, ...)
+                        <li>
+                            Un caractère spécial
                         </li>
-
                     </ul>
 
                 </div>
 
+
+                @error('password')
+
+                    <div class="error-message">
+                        {{ $message }}
+                    </div>
+
+                @enderror
+
             </div>
 
 
+            {{-- CONFIRMATION MOT DE PASSE --}}
+
             <div class="form-group">
 
-                <label for="password_confirmation">
+                <label
+                    for="password_confirmation"
+                    class="form-label"
+                >
                     Confirmer le mot de passe
                 </label>
+
 
                 <div class="password-wrapper">
 
                     <input
-                        class="form-control"
                         id="password_confirmation"
                         type="password"
                         name="password_confirmation"
+                        class="form-input"
                         required
-                        minlength="8"
                         autocomplete="new-password"
                     >
 
+
                     <button
-                        class="password-toggle"
                         type="button"
-                        data-target="password_confirmation"
+                        class="password-toggle"
+                        onclick="
+                            togglePassword(
+                                'password_confirmation',
+                                this
+                            )
+                        "
                     >
                         Afficher
                     </button>
@@ -588,17 +657,20 @@
             </div>
 
 
+            {{-- BOUTON INSCRIPTION --}}
+
             <button
-                class="button"
                 type="submit"
+                class="submit-button"
             >
-                S’inscrire
+                Créer mon compte
             </button>
+
 
         </form>
 
 
-        <footer class="auth-footer">
+        <div class="login-link">
 
             Vous avez déjà un compte ?
 
@@ -606,243 +678,179 @@
                 Se connecter
             </a>
 
-        </footer>
-
-    </main>
+        </div>
 
 
-    <script>
+    </div>
 
-        /*
-        |--------------------------------------------------------------------------
-        | AFFICHAGE DES CHAMPS SELON LE RÔLE
-        |--------------------------------------------------------------------------
-        */
-
-        const roleInputs =
-            document.querySelectorAll(
-                'input[name="role"]'
-            );
-
-        const filiereField =
-            document.getElementById(
-                'filiere-field'
-            );
-
-        const specialiteField =
-            document.getElementById(
-                'specialite-field'
-            );
-
-        const filiereSelect =
-            document.getElementById(
-                'id_filier'
-            );
-
-        const specialiteInput =
-            document.getElementById(
-                'specialite'
-            );
+</section>
 
 
-        function updateProfileFields() {
+<script>
 
-            const checkedRole =
-                document.querySelector(
-                    'input[name="role"]:checked'
+    document.addEventListener(
+        'DOMContentLoaded',
+        function () {
+
+            const roleInputs =
+                document.querySelectorAll(
+                    'input[name="role"]'
                 );
 
-            const role =
-                checkedRole
-                    ? checkedRole.value
-                    : '';
+            const studentFields =
+                document.getElementById(
+                    'studentFields'
+                );
+
+            const teacherFields =
+                document.getElementById(
+                    'teacherFields'
+                );
+
+            const studentSelect =
+                document.getElementById(
+                    'id_filier'
+                );
+
+            const teacherInput =
+                document.getElementById(
+                    'specialite'
+                );
 
 
-            filiereField.style.display =
-                role === 'etudiant'
-                    ? 'block'
-                    : 'none';
+            function updateRoleFields() {
+
+                const checkedRole =
+                    document.querySelector(
+                        'input[name="role"]:checked'
+                    );
 
 
-            specialiteField.style.display =
-                role === 'formateur'
-                    ? 'block'
-                    : 'none';
+                const role =
+                    checkedRole
+                        ? checkedRole.value
+                        : null;
 
 
-            filiereSelect.required =
-                role === 'etudiant';
+                /*
+                |--------------------------------------------------------------------------
+                | ÉTUDIANT
+                |--------------------------------------------------------------------------
+                */
+
+                if (role === 'etudiant') {
+
+                    studentFields.style.display =
+                        'block';
+
+                    teacherFields.style.display =
+                        'none';
+
+                    studentSelect.required =
+                        true;
+
+                    teacherInput.required =
+                        false;
+
+                    teacherInput.value =
+                        '';
+
+                    return;
+                }
 
 
-            specialiteInput.required =
-                role === 'formateur';
+                /*
+                |--------------------------------------------------------------------------
+                | FORMATEUR
+                |--------------------------------------------------------------------------
+                */
+
+                if (role === 'formateur') {
+
+                    studentFields.style.display =
+                        'none';
+
+                    teacherFields.style.display =
+                        'block';
+
+                    studentSelect.required =
+                        false;
+
+                    teacherInput.required =
+                        true;
+
+                    studentSelect.value =
+                        '';
+
+                    return;
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | AUCUN RÔLE
+                |--------------------------------------------------------------------------
+                */
+
+                studentFields.style.display =
+                    'none';
+
+                teacherFields.style.display =
+                    'none';
+
+                studentSelect.required =
+                    false;
+
+                teacherInput.required =
+                    false;
+            }
+
+
+            roleInputs.forEach(
+                function (input) {
+
+                    input.addEventListener(
+                        'change',
+                        updateRoleFields
+                    );
+                }
+            );
+
+
+            updateRoleFields();
         }
+    );
 
 
-        roleInputs.forEach(
-            (input) => {
+    function togglePassword(
+        inputId,
+        button
+    ) {
 
-                input.addEventListener(
-                    'change',
-                    updateProfileFields
-                );
-
-            }
-        );
-
-
-        updateProfileFields();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | VÉRIFICATION VISUELLE DU MOT DE PASSE
-        |--------------------------------------------------------------------------
-        */
-
-        const passwordInput =
+        const input =
             document.getElementById(
-                'password'
+                inputId
             );
 
 
-        const rules = {
+        if (input.type === 'password') {
 
-            length:
-                document.getElementById(
-                    'rule-length'
-                ),
+            input.type =
+                'text';
 
-            uppercase:
-                document.getElementById(
-                    'rule-uppercase'
-                ),
+            button.textContent =
+                'Masquer';
 
-            lowercase:
-                document.getElementById(
-                    'rule-lowercase'
-                ),
+        } else {
 
-            number:
-                document.getElementById(
-                    'rule-number'
-                ),
+            input.type =
+                'password';
 
-            symbol:
-                document.getElementById(
-                    'rule-symbol'
-                ),
-
-        };
-
-
-        function setRuleState(
-            element,
-            isValid
-        ) {
-
-            element.classList.toggle(
-                'valid',
-                isValid
-            );
-
-            element.classList.toggle(
-                'invalid',
-                ! isValid
-            );
+            button.textContent =
+                'Afficher';
         }
+    }
 
+</script>
 
-        passwordInput.addEventListener(
-            'input',
-            function () {
-
-                const value =
-                    passwordInput.value;
-
-
-                setRuleState(
-                    rules.length,
-                    value.length >= 8
-                );
-
-
-                setRuleState(
-                    rules.uppercase,
-                    /[A-Z]/.test(value)
-                );
-
-
-                setRuleState(
-                    rules.lowercase,
-                    /[a-z]/.test(value)
-                );
-
-
-                setRuleState(
-                    rules.number,
-                    /[0-9]/.test(value)
-                );
-
-
-                setRuleState(
-                    rules.symbol,
-                    /[^A-Za-z0-9]/.test(value)
-                );
-
-            }
-        );
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | AFFICHER / MASQUER LE MOT DE PASSE
-        |--------------------------------------------------------------------------
-        */
-
-        const toggleButtons =
-            document.querySelectorAll(
-                '.password-toggle'
-            );
-
-
-        toggleButtons.forEach(
-            (button) => {
-
-                button.addEventListener(
-                    'click',
-                    function () {
-
-                        const target =
-                            document.getElementById(
-                                button.dataset.target
-                            );
-
-
-                        if (
-                            target.type
-                            === 'password'
-                        ) {
-                            target.type = 'text';
-
-                            button.textContent =
-                                'Masquer';
-                        } else {
-                            target.type =
-                                'password';
-
-                            button.textContent =
-                                'Afficher';
-                        }
-
-                    }
-                );
-
-            }
-        );
-
-    </script>
-
-</body>
-
-</html>
+@endsection
