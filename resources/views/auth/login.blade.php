@@ -36,7 +36,7 @@
                 );
 
             color: #1f2937;
-        }
+        } 
 
         .auth-container {
             width: 100%;

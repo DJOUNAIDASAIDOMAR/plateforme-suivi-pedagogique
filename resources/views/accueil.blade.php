@@ -484,7 +484,7 @@ linear-gradient(
     <div class="hero-container">
         <div class="hero-content">
             <span class="hero-badge">
-                Plateforme pédagogique DWWM
+               Plateforme de suivi pédagogique
             </span>
 
             <h1>
