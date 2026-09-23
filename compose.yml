@@ -1,4 +1,4 @@
-services:
+﻿services:
 
   # =========================================================
   # LARAVEL / PHP-FPM
@@ -6,7 +6,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.local
     container_name: plateforme_app
     restart: unless-stopped
     working_dir: /var/www
